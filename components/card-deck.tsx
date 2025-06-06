@@ -14,6 +14,8 @@ export default function CardDeck() {
   // Filter states
   const [selectedTasks, setSelectedTasks] = useState<string[]>([])
   const [selectedObjectives, setSelectedObjectives] = useState<string[]>([])
+  const [selectedProjectObjectives, setSelectedProjectObjectives] = useState<string[]>([])
+  const [selectedEvaluations, setSelectedEvaluations] = useState<string[]>([])
   const [selectedModules, setSelectedModules] = useState<string[]>([])
   const [selectedDomains, setSelectedDomains] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>("")
@@ -24,6 +26,8 @@ export default function CardDeck() {
   // Extract unique filter values
   const tasks = [...new Set(cardData.map((card) => card.task))]
   const objectives = [...new Set(cardData.map((card) => card.objective))]
+  const projectObjectives = [...new Set(cardData.map((card) => card.projectObjective))]
+  const evaluations = [...new Set(cardData.map((card) => card.evaluation))]
   const allModules = [...new Set(cardData.flatMap((card) => card.module))]
   const allDomains = [...new Set(cardData.flatMap((card) => card.domain))]
 
@@ -39,6 +43,16 @@ export default function CardDeck() {
     // Filter by objectives
     if (selectedObjectives.length > 0) {
       result = result.filter((card) => selectedObjectives.includes(card.objective))
+    }
+
+    // Filter by project objectives
+    if (selectedProjectObjectives.length > 0) {
+      result = result.filter((card) => selectedProjectObjectives.includes(card.projectObjective))
+    }
+
+    // Filter by evaluations
+    if (selectedEvaluations.length > 0) {
+      result = result.filter((card) => selectedEvaluations.includes(card.evaluation))
     }
 
     // Filter by modules (card must have at least one of the selected modules)
@@ -60,6 +74,8 @@ export default function CardDeck() {
           card.title.toLowerCase().includes(query) ||
           card.task.toLowerCase().includes(query) ||
           card.objective.toLowerCase().includes(query) ||
+          card.projectObjective.toLowerCase().includes(query) ||
+          card.evaluation.toLowerCase().includes(query) ||
           card.description.toLowerCase().includes(query) ||
           card.objectiveDescription.toLowerCase().includes(query) ||
           card.formula.toLowerCase().includes(query) ||
@@ -70,7 +86,15 @@ export default function CardDeck() {
     }
 
     setFilteredCards(result)
-  }, [selectedTasks, selectedObjectives, selectedModules, selectedDomains, searchQuery])
+  }, [
+    selectedTasks,
+    selectedObjectives,
+    selectedProjectObjectives,
+    selectedEvaluations,
+    selectedModules,
+    selectedDomains,
+    searchQuery,
+  ])
 
   // Toggle task selection
   const toggleTask = (task: string) => {
@@ -81,6 +105,20 @@ export default function CardDeck() {
   const toggleObjective = (objective: string) => {
     setSelectedObjectives((prev) =>
       prev.includes(objective) ? prev.filter((o) => o !== objective) : [...prev, objective],
+    )
+  }
+
+  // Toggle project objective selection
+  const toggleProjectObjective = (projectObjective: string) => {
+    setSelectedProjectObjectives((prev) =>
+      prev.includes(projectObjective) ? prev.filter((po) => po !== projectObjective) : [...prev, projectObjective],
+    )
+  }
+
+  // Toggle evaluation selection
+  const toggleEvaluation = (evaluation: string) => {
+    setSelectedEvaluations((prev) =>
+      prev.includes(evaluation) ? prev.filter((e) => e !== evaluation) : [...prev, evaluation],
     )
   }
 
@@ -98,6 +136,8 @@ export default function CardDeck() {
   const resetFilters = () => {
     setSelectedTasks([])
     setSelectedObjectives([])
+    setSelectedProjectObjectives([])
+    setSelectedEvaluations([])
     setSelectedModules([])
     setSelectedDomains([])
     setSearchQuery("")
@@ -170,6 +210,50 @@ export default function CardDeck() {
             </div>
           </div>
 
+          {/* Project Objective filter */}
+          <div className="space-y-2">
+            <Label>Project Objectives</Label>
+            <div className="space-y-2">
+              {projectObjectives.map((projectObjective) => (
+                <div key={projectObjective} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`project-objective-${projectObjective}`}
+                    checked={selectedProjectObjectives.includes(projectObjective)}
+                    onCheckedChange={() => toggleProjectObjective(projectObjective)}
+                  />
+                  <label
+                    htmlFor={`project-objective-${projectObjective}`}
+                    className="text-sm font-medium capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {projectObjective}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Evaluation filter */}
+          <div className="space-y-2">
+            <Label>Evaluations</Label>
+            <div className="space-y-2">
+              {evaluations.map((evaluation) => (
+                <div key={evaluation} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`evaluation-${evaluation}`}
+                    checked={selectedEvaluations.includes(evaluation)}
+                    onCheckedChange={() => toggleEvaluation(evaluation)}
+                  />
+                  <label
+                    htmlFor={`evaluation-${evaluation}`}
+                    className="text-sm font-medium capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {evaluation}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Modules filter */}
           <div className="space-y-2">
             <Label className="block">Modules</Label>
@@ -213,6 +297,8 @@ export default function CardDeck() {
         </p>
         {(selectedTasks.length > 0 ||
           selectedObjectives.length > 0 ||
+          selectedProjectObjectives.length > 0 ||
+          selectedEvaluations.length > 0 ||
           selectedModules.length > 0 ||
           selectedDomains.length > 0 ||
           searchQuery) && (
@@ -240,6 +326,12 @@ export default function CardDeck() {
                   </Badge>
                   <Badge variant="secondary" className="capitalize">
                     {card.objective}
+                  </Badge>
+                  <Badge variant="secondary" className="capitalize">
+                    {card.projectObjective}
+                  </Badge>
+                  <Badge variant="secondary" className="capitalize">
+                    {card.evaluation}
                   </Badge>
                 </div>
               </CardHeader>
