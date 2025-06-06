@@ -31,4 +31,3 @@ export const cardData: CardData[] = [
     unit: "Ordinal data response on a Likert scale (or potentially a similar response on an interval scale)",
   },
 ]
-
