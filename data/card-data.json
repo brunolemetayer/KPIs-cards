@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "ID": "KPI-AS-001",
+    "title": "Ability to anticipate",
+    "task": "Social-technical (Task 4.3)",
+    "objective": "Human user experience",
+    "projectObjective": "O3",
+    "domain": ["Railway", "Power Grid", "ATM"],
+    "evaluation": "special evaluation setup",
+    "description": "The ability to anticipate. Knowing what to expect or being able to anticipate developments further into the future, such as potential disruptions, novel demands or constraints, new opportunities, or changing operating conditions (Hollnagel, 2015, p. 4).",
+    "objectiveDescription": "This KPI contributes to evaluating Human user experience of the AI-based assistant, as part of Social-technical (Task 4.3) evaluation objectives, and O3 main project objective.",
+    "formula": "As operationalized by the questionnaire (normally Likert-scales with several items that are rated on a scale of e.g. 1-5)",
+    "unit": "Lickert-Scale or similar"
+  }
+]

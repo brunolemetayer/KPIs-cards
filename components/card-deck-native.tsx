@@ -1,16 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { X } from "lucide-react"
 import { cardData, type CardData } from "@/data/card-data"
 
-export default function CardDeck() {
+export default function CardDeckNative() {
   // Filter states
   const [selectedTasks, setSelectedTasks] = useState<string[]>([])
   const [selectedObjectives, setSelectedObjectives] = useState<string[]>([])
@@ -124,41 +117,47 @@ export default function CardDeck() {
   return (
     <div className="space-y-8">
       {/* Filter section */}
-      <div className="bg-card p-6 rounded-lg shadow-sm border">
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Filters</h2>
-          <Button variant="outline" size="sm" onClick={resetFilters} className="flex items-center gap-1 bg-transparent">
-            <X className="h-4 w-4" /> Clear All
-          </Button>
+          <button
+            onClick={resetFilters}
+            className="px-3 py-1 text-sm border border-gray-300 rounded-md flex items-center gap-1 hover:bg-gray-50"
+          >
+            <span className="inline-block w-4 h-4">✕</span> Clear All
+          </button>
         </div>
 
         <div className="space-y-6">
           {/* Search */}
           <div className="space-y-2">
-            <Label htmlFor="search">Search</Label>
-            <Input
+            <label htmlFor="search" className="block text-sm font-medium">
+              Search
+            </label>
+            <input
               id="search"
+              type="text"
               placeholder="Search cards..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
             />
           </div>
 
           {/* Task filter */}
           <div className="space-y-2">
-            <Label>Tasks</Label>
+            <span className="block text-sm font-medium">Tasks</span>
             <div className="space-y-2">
               {tasks.map((task) => (
                 <div key={task} className="flex items-center space-x-2">
-                  <Checkbox
+                  <input
+                    type="checkbox"
                     id={`task-${task}`}
                     checked={selectedTasks.includes(task)}
-                    onCheckedChange={() => toggleTask(task)}
+                    onChange={() => toggleTask(task)}
+                    className="h-4 w-4"
                   />
-                  <label
-                    htmlFor={`task-${task}`}
-                    className="text-sm font-medium capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
+                  <label htmlFor={`task-${task}`} className="text-sm font-medium capitalize leading-none">
                     {task}
                   </label>
                 </div>
@@ -168,19 +167,18 @@ export default function CardDeck() {
 
           {/* Objective filter */}
           <div className="space-y-2">
-            <Label>Objectives</Label>
+            <span className="block text-sm font-medium">Objectives</span>
             <div className="space-y-2">
               {objectives.map((objective) => (
                 <div key={objective} className="flex items-center space-x-2">
-                  <Checkbox
+                  <input
+                    type="checkbox"
                     id={`objective-${objective}`}
                     checked={selectedObjectives.includes(objective)}
-                    onCheckedChange={() => toggleObjective(objective)}
+                    onChange={() => toggleObjective(objective)}
+                    className="h-4 w-4"
                   />
-                  <label
-                    htmlFor={`objective-${objective}`}
-                    className="text-sm font-medium capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
+                  <label htmlFor={`objective-${objective}`} className="text-sm font-medium capitalize leading-none">
                     {objective}
                   </label>
                 </div>
@@ -190,18 +188,20 @@ export default function CardDeck() {
 
           {/* Project Objective filter */}
           <div className="space-y-2">
-            <Label>Project Objectives</Label>
+            <span className="block text-sm font-medium">Project Objectives</span>
             <div className="space-y-2">
               {projectObjectives.map((projectObjective) => (
                 <div key={projectObjective} className="flex items-center space-x-2">
-                  <Checkbox
+                  <input
+                    type="checkbox"
                     id={`project-objective-${projectObjective}`}
                     checked={selectedProjectObjectives.includes(projectObjective)}
-                    onCheckedChange={() => toggleProjectObjective(projectObjective)}
+                    onChange={() => toggleProjectObjective(projectObjective)}
+                    className="h-4 w-4"
                   />
                   <label
                     htmlFor={`project-objective-${projectObjective}`}
-                    className="text-sm font-medium capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm font-medium capitalize leading-none"
                   >
                     {projectObjective}
                   </label>
@@ -212,19 +212,18 @@ export default function CardDeck() {
 
           {/* Evaluation filter */}
           <div className="space-y-2">
-            <Label>Evaluations</Label>
+            <span className="block text-sm font-medium">Evaluations</span>
             <div className="space-y-2">
               {evaluations.map((evaluation) => (
                 <div key={evaluation} className="flex items-center space-x-2">
-                  <Checkbox
+                  <input
+                    type="checkbox"
                     id={`evaluation-${evaluation}`}
                     checked={selectedEvaluations.includes(evaluation)}
-                    onCheckedChange={() => toggleEvaluation(evaluation)}
+                    onChange={() => toggleEvaluation(evaluation)}
+                    className="h-4 w-4"
                   />
-                  <label
-                    htmlFor={`evaluation-${evaluation}`}
-                    className="text-sm font-medium capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
+                  <label htmlFor={`evaluation-${evaluation}`} className="text-sm font-medium capitalize leading-none">
                     {evaluation}
                   </label>
                 </div>
@@ -234,17 +233,20 @@ export default function CardDeck() {
 
           {/* Domains filter */}
           <div className="space-y-2">
-            <Label className="block">Domains</Label>
+            <span className="block text-sm font-medium">Domains</span>
             <div className="flex flex-wrap gap-2">
               {allDomains.map((domain) => (
-                <Badge
+                <button
                   key={domain}
-                  variant={selectedDomains.includes(domain) ? "default" : "outline"}
-                  className="cursor-pointer capitalize"
                   onClick={() => toggleDomain(domain)}
+                  className={`px-2 py-1 text-xs rounded-full capitalize ${
+                    selectedDomains.includes(domain)
+                      ? "bg-blue-100 text-blue-800 border border-blue-300"
+                      : "bg-gray-100 text-gray-800 border border-gray-300"
+                  }`}
                 >
                   {domain}
-                </Badge>
+                </button>
               ))}
             </div>
           </div>
@@ -253,7 +255,7 @@ export default function CardDeck() {
 
       {/* Results summary */}
       <div className="flex justify-between items-center">
-        <p className="text-muted-foreground">
+        <p className="text-gray-500">
           Showing {filteredCards.length} of {cardData.length} cards
         </p>
         {(selectedTasks.length > 0 ||
@@ -262,9 +264,9 @@ export default function CardDeck() {
           selectedEvaluations.length > 0 ||
           selectedDomains.length > 0 ||
           searchQuery) && (
-          <Button variant="ghost" size="sm" onClick={resetFilters}>
+          <button onClick={resetFilters} className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
             Reset filters
-          </Button>
+          </button>
         )}
       </div>
 
@@ -272,70 +274,73 @@ export default function CardDeck() {
       {filteredCards.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCards.map((card) => (
-            <Card key={card.id} className="flex flex-col h-full">
-              <CardHeader className="pb-2">
+            <div key={card.id} className="border border-gray-200 rounded-lg shadow-sm flex flex-col h-full bg-white">
+              <div className="p-4 border-b border-gray-200">
                 <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">{card.title}</CardTitle>
-                  <Badge variant="outline" className="font-mono">
+                  <h3 className="text-lg font-semibold">{card.title}</h3>
+                  <span className="inline-block px-2 py-1 text-xs font-mono bg-gray-100 text-gray-800 rounded border border-gray-300">
                     {card.ID}
-                  </Badge>
+                  </span>
                 </div>
 
                 {/* Domains display */}
                 <div className="flex flex-wrap gap-1 mt-2 mb-2">
                   {card.domain.map((dom) => (
-                    <Badge key={dom} variant="outline" className="text-xs capitalize">
+                    <span
+                      key={dom}
+                      className="inline-block px-2 py-0.5 text-xs bg-gray-100 text-gray-800 rounded-full border border-gray-300 capitalize"
+                    >
                       {dom}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
 
                 <div className="flex flex-wrap gap-2 mt-1">
-                  <Badge variant="secondary" className="capitalize">
+                  <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full capitalize">
                     {card.task}
-                  </Badge>
-                  <Badge variant="secondary" className="capitalize">
+                  </span>
+                  <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full capitalize">
                     {card.objective}
-                  </Badge>
-                  <Badge variant="secondary" className="capitalize">
+                  </span>
+                  <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full capitalize">
                     {card.projectObjective}
-                  </Badge>
-                  <Badge variant="secondary" className="capitalize">
+                  </span>
+                  <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full capitalize">
                     {card.evaluation}
-                  </Badge>
+                  </span>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-4 flex-grow">
+              </div>
+              <div className="p-4 space-y-4 flex-grow">
                 <div>
-                  <h3 className="text-sm font-medium mb-1">Description:</h3>
-                  <p className="text-sm text-muted-foreground">{card.description}</p>
+                  <h4 className="text-sm font-medium mb-1">Description:</h4>
+                  <p className="text-sm text-gray-600">{card.description}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium mb-1">Objective Description:</h3>
-                  <p className="text-sm text-muted-foreground">{card.objectiveDescription}</p>
+                  <h4 className="text-sm font-medium mb-1">Objective Description:</h4>
+                  <p className="text-sm text-gray-600">{card.objectiveDescription}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium mb-1">Formula:</h3>
-                  <p className="text-sm text-muted-foreground">{card.formula}</p>
+                  <h4 className="text-sm font-medium mb-1">Formula:</h4>
+                  <p className="text-sm text-gray-600">{card.formula}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium mb-1">Unit:</h3>
-                  <p className="text-sm text-muted-foreground">{card.unit}</p>
+                  <h4 className="text-sm font-medium mb-1">Unit:</h4>
+                  <p className="text-sm text-gray-600">{card.unit}</p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       ) : (
         <div className="text-center py-12">
           <h3 className="text-lg font-medium">No cards match your filters</h3>
-          <p className="text-muted-foreground mt-2">Try adjusting your filter criteria</p>
-          <Button className="mt-4" onClick={resetFilters}>
+          <p className="text-gray-500 mt-2">Try adjusting your filter criteria</p>
+          <button onClick={resetFilters} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
             Reset all filters
-          </Button>
+          </button>
         </div>
       )}
     </div>

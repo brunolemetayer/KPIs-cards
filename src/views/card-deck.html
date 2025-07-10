@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.5;
+      color: #111827;
+      background-color: #f9fafb;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1rem;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+    .filters {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+      margin-bottom: 2rem;
+    }
+    .filters-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .filters-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .clear-btn {
+      padding: 0.25rem 0.75rem;
+      font-size: 0.875rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background-color: white;
+      cursor: pointer;
+    }
+    .clear-btn:hover {
+      background-color: #f9fafb;
+    }
+    .filter-group {
+      margin-bottom: 1.5rem;
+    }
+    .filter-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+    }
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .checkbox-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+    .badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      border-radius: 9999px;
+      text-transform: capitalize;
+      cursor: pointer;
+    }
+    .badge-outline {
+      background-color: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+    .badge-filled {
+      background-color: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+    .results-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .results-count {
+      color: #6b7280;
+    }
+    .reset-btn {
+      padding: 0.25rem 0.75rem;
+      font-size: 0.875rem;
+      color: #4b5563;
+      background-color: transparent;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+    }
+    .reset-btn:hover {
+      background-color: #f3f4f6;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 1.5rem;
+    }
+    .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .card-header {
+      padding: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .card-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .card-id {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      font-family: monospace;
+      background-color: #f3f4f6;
+      color: #374151;
+      border-radius: 0.25rem;
+      border: 1px solid #e5e7eb;
+    }
+    .card-domains {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .domain-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.1rem 0.5rem;
+      background-color: #f3f4f6;
+      color: #374151;
+      border-radius: 9999px;
+      border: 1px solid #e5e7eb;
+      text-transform: capitalize;
+    }
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    .meta-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      background-color: #dbeafe;
+      color: #1e40af;
+      border-radius: 9999px;
+      text-transform: capitalize;
+    }
+    .card-content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      flex-grow: 1;
+    }
+    .content-section {
+      margin-bottom: 0.5rem;
+    }
+    .content-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    .content-text {
+      font-size: 0.875rem;
+      color: #4b5563;
+      margin: 0;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 3rem 0;
+    }
+    .empty-title {
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .empty-message {
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+    .empty-button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .empty-button:hover {
+      background-color: #1d4ed8;
+    }
+    
+    /* Responsive styles */
+    @media (min-width: 768px) {
+      .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .card-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>{{title}}</h1>
+    
+    {{#if isStatic}}
+    <!-- Static version has no filters -->
+    {{else}}
+    <!-- Filter section -->
+    <div class="filters">
+      <div class="filters-header">
+        <h2 class="filters-title">Filters</h2>
+        <button class="clear-btn" onclick="clearAllFilters()">
+          <span>✕</span> Clear All
+        </button>
+      </div>
+      
+      <div class="filter-group">
+        <label for="search" class="filter-label">Search</label>
+        <input 
+          type="text" 
+          id="search" 
+          class="search-input" 
+          placeholder="Search cards..." 
+          value="{{activeFilters.search}}"
+          onchange="applyFilter('search', this.value)"
+        >
+      </div>
+      
+      <!-- Task filter -->
+      <div class="filter-group">
+        <span class="filter-label">Tasks</span>
+        <div class="checkbox-group">
+          {{#each filters.tasks}}
+          <div class="checkbox-item">
+            <input 
+              type="checkbox" 
+              id="task-{{this}}" 
+              {{#if activeFilters.task == this}}checked{{/if}}
+              onchange="applyFilter('task', this.checked ? '{{this}}' : '')"
+            >
+            <label for="task-{{this}}" class="checkbox-label">{{this}}</label>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      
+      <!-- Objective filter -->
+      <div class="filter-group">
+        <span class="filter-label">Objectives</span>
+        <div class="checkbox-group">
+          {{#each filters.objectives}}
+          <div class="checkbox-item">
+            <input 
+              type="checkbox" 
+              id="objective-{{this}}" 
+              {{#if activeFilters.objective == this}}checked{{/if}}
+              onchange="applyFilter('objective', this.checked ? '{{this}}' : '')"
+            >
+            <label for="objective-{{this}}" class="checkbox-label">{{this}}</label>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      
+      <!-- Project Objective filter -->
+      <div class="filter-group">
+        <span class="filter-label">Project Objectives</span>
+        <div class="checkbox-group">
+          {{#each filters.projectObjectives}}
+          <div class="checkbox-item">
+            <input 
+              type="checkbox" 
+              id="project-objective-{{this}}" 
+              {{#if activeFilters.projectObjective == this}}checked{{/if}}
+              onchange="applyFilter('projectObjective', this.checked ? '{{this}}' : '')"
+            >
+            <label for="project-objective-{{this}}" class="checkbox-label">{{this}}</label>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      
+      <!-- Evaluation filter -->
+      <div class="filter-group">
+        <span class="filter-label">Evaluations</span>
+        <div class="checkbox-group">
+          {{#each filters.evaluations}}
+          <div class="checkbox-item">
+            <input 
+              type="checkbox" 
+              id="evaluation-{{this}}" 
+              {{#if activeFilters.evaluation == this}}checked{{/if}}
+              onchange="applyFilter('evaluation', this.checked ? '{{this}}' : '')"
+            >
+            <label for="evaluation-{{this}}" class="checkbox-label">{{this}}</label>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      
+      <!-- Domains filter -->
+      <div class="filter-group">
+        <span class="filter-label">Domains</span>
+        <div class="badge-group">
+          {{#each filters.domains}}
+          <span 
+            class="badge {{#if activeFilters.domain == this}}badge-filled{{else}}badge-outline{{/if}}" 
+            onclick="applyFilter('domain', '{{this}}')"
+          >
+            {{this}}
+          </span>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    {{/if}}
+    
+    <!-- Results summary -->
+    <div class="results-summary">
+      <p class="results-count">
+        Showing {{filteredCount}} of {{totalCards}} cards
+      </p>
+      {{#if activeFilters}}
+      <button class="reset-btn" onclick="clearAllFilters()">
+        Reset filters
+      </button>
+      {{/if}}
+    </div>
+    
+    <!-- Card grid -->
+    {{#if cards.length}}
+    <div class="card-grid">
+      {{#each cards}}
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-row">
+            <h3 class="card-title">{{title}}</h3>
+            <span class="card-id">{{ID}}</span>
+          </div>
+          
+          <div class="card-domains">
+            {{#each domain}}
+            <span class="domain-badge">{{this}}</span>
+            {{/each}}
+          </div>
+          
+          <div class="card-meta">
+            <span class="meta-badge">{{task}}</span>
+            <span class="meta-badge">{{objective}}</span>
+            <span class="meta-badge">{{projectObjective}}</span>
+            <span class="meta-badge">{{evaluation}}</span>
+          </div>
+        </div>
+        
+        <div class="card-content">
+          <div class="content-section">
+            <h4 class="content-title">Description:</h4>
+            <p class="content-text">{{description}}</p>
+          </div>
+          
+          <div class="content-section">
+            <h4 class="content-title">Objective Description:</h4>
+            <p class="content-text">{{objectiveDescription}}</p>
+          </div>
+          
+          <div class="content-section">
+            <h4 class="content-title">Formula:</h4>
+            <p class="content-text">{{formula}}</p>
+          </div>
+          
+          <div class="content-section">
+            <h4 class="content-title">Unit:</h4>
+            <p class="content-text">{{unit}}</p>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+    <div class="empty-state">
+      <h3 class="empty-title">No cards match your filters</h3>
+      <p class="empty-message">Try adjusting your filter criteria</p>
+      <button class="empty-button" onclick="clearAllFilters()">
+        Reset all filters
+      </button>
+    </div>
+    {{/if}}
+  </div>
+  
+  {{#if isStatic}}
+  <!-- No scripts for static version -->
+  {{else}}
+  <script>
+    // Apply a filter and reload the page
+    function applyFilter(name, value) {
+      const url = new URL(window.location.href);
+      
+      if (value) {
+        url.searchParams.set(name, value);
+      } else {
+        url.searchParams.delete(name);
+      }
+      
+      window.location.href = url.toString();
+    }
+    
+    // Clear all filters
+    function clearAllFilters() {
+      window.location.href = window.location.pathname;
+    }
+  </script>
+  {{/if}}
+</body>
+</html>
